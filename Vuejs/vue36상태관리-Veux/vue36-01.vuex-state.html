@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuex Sample</title>
+
+    <!-- CSS import -->
+    <link rel="stylesheet" href="../css/reset.css">
+
+</head>
+
+<body>
+    <xmp>
+
+      1 상태 관리란?
+        상태 관리란 한 곳에서 여러 컴포넌트 간에 공유되는 데이터를 관리한다는 것을 의미합니다.
+        데이터 공유 
+            컴포넌트 <--> 컴포넌트: props, 이벤트
+            인스턴스 <--> 컴포넌트: props, 이벤트
+            
+
+      2 상태 관리(State Management)가 왜 필요한가?
+       컴포넌트로 화면을 구성하는 경우 컴포넌트간의 데이터 공유가 필요합니다.
+       컴포넌트가 많은 경우 props나 이벤트, 이벤트버스를 사용하여 상태를 관리하는 것은 효율적이지 않습니다.
+       컴포넌트가 많은 경우 효율적인 컴포넌트 간의 통신이나 데이터 관리 방밥이 필요합니다.
+       그것이 Vuex 입니다.
+       
+      3. Vuex란?
+       Vue.js의 상태 관리 라이브러리입니다.
+       
+      4. 왜 Vuex 를 사용해야 하는가? 
+      ==>
+       일반적으로 앱의 규모가 커지면서 생기는 문제점들은 다음과 같습니다.
+       . 너무 많은 props, event emit 사용
+       . Event Bus사용으로 인해 컴포넌트 간 데이터 흐름을 파악하기 어려운 경우
+      이러한 문제점이 발생 하는 경우 Vuex를 사용하면 쉽게 해결 할 수 있습니다.
+      복잡한 state down(props) / state up(event) 처리를 없애기 위해서 사용 된다. 
+
+      5. Vuex 구성 5 요소
+       . view(==component) : 컴포넌트 나 인스턴스가 된다.
+       . actions : 사용자의 입력에 따라 반응할 methods.
+                   비동기적 로직을 수행
+                   this.$store.dispatch("action명", payload) 을 사용하여 호출
+       . mutations: 동기적 로직을 수행
+                   this.$store.commit("action명", payload) 을 사용하여 호출
+       . state : 컴포넌트 간에 공유할 data
+       . getter:
+
+    -------------------------------------------------------
+    
+      작업1. vue 인스턴스 기능 완성. data 프로퍼티 추가
+          {{header}} 에는 "Vuex 사용 앱" 가 나오게
+          {{welcome}} 에는 "HELLO WORLD" 가 나오게
+          {{counter}} 에는 0 이 나오게
+  
+      작업2. vue 인스턴스 기능 완성. 버튼 추가
+          <button v-on:click="increment">더해줘</button>
+          <button v-on:click="decrement">빼줘</button>
+
+      작업3. vuex store 만들기.
+        vue 인스턴스 data 의 welcome과 counter를 vuex store 로 옮기기.
+
+      작업4. store를 사용하도록 인스턴스나 컴포넌트 코드 수정
+    </xmp>
+    <hr>
+    <div id="app">
+        <h1>{{header}}</h1>
+        <h2>{{welcome}}</h2>
+        <h3>{{counter}}</h3>
+        <button v-on:click="increment">더해줘</button>
+        <button v-on:click="decrement">빼줘</button>
+    </div>
+</body>
+
+</html>
+
+<!-- vue 플러그인 임포트   -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"> /* JSX를 자바스크립트로 변환 */</script>
+<script src="https://unpkg.com/vue@2.5.16/dist/vue.js">/* vue 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vuex@3.3.0/dist/vuex.js"> /* vuex 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vue-router@3.1.6/dist/vue-router.js"> /* vue 라우터 플러그인 임포트 */</script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"> /* axios 플러그인 임포트 */</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> /* jQuery library */</script>
+<script>
+    // vuex 인스턴스 만들기.
+    var store = new Vuex.Store({
+        actions: {
+            /* 왜 actions를 사용하나? 비동기식 처리 위해서
+               actions 에는 메서드만 등록 가능하다.
+               첫번째인자: 무조건 mutations.
+               두번째인자: 값. 
+            */
+            increment: function(mutations, param1) {
+                // 비동기 함수 호출 
+                window.setTimeout( ()=> mutations.commit("increment", param1), 3000); // 3000ms = 3s 지연
+            },
+            decrement: function (mutations, param1) {
+                // 비동기 외부 함수 호출 & 결과 받기.
+                var result1 = param1
+                
+                window.setTimeout( ()=>mutations.commit("decrement", result1), 3000); // 3000ms = 3s 지연
+            },
+        },
+        mutations: {
+            /* 왜 mutations 를 사용하나? 동기식 처리. state 를 바꾸기 위해서
+            mutations 는 메서드만 가능하다.
+            첫번째인자: 무조건 state.
+            두번째인자: 값.
+            */
+            increment: function (state, param1) {
+                //state 변경
+                //this.$data.counter =  this.$data.counter + 1;
+                //this.$set(this.$data, "counter", this.$data.counter + 1)
+                state.counter = state.counter + param1;
+            },
+            decrement: function (state, param1) {
+                //state 변경
+                //this.$data.counter =  this.$data.counter - 1;
+                //this.$set(this.$data, "counter", this.$data.counter - 1)
+                state.counter = state.counter + param1;
+            },
+        },
+        state: {
+            /* vue인스턴스나 컴포넌트의 data 프로퍼티에 해당 */
+            welcome: "HELLO WORLD",
+            counter: 0,
+        },
+        getters: {
+            /* state 변경 여부를 컴포넌트에 알리는 역활
+             * 메서드로 만들어야 하며 메서드명은 state 의 이름을 그대로 사용
+             * 첫번째인자: 무조건 state
+             */
+            welcome: function(state){
+                return state.welcome;
+            },
+            counter: function(state){
+                return state.counter;
+            },
+        },
+    })
+
+    // vue 인스턴스 만들기.
+    new Vue({
+        /* edtmc^2w */
+        el: "#app",
+        data: {
+            header: "Vuex 사용 앱",
+            //welcome: "HELLO WORLD",
+            //counter: 0,
+        },
+        //template: ``,
+        methods: {
+            increment: function(event){
+                //this.$data.counter =  this.$data.counter + 1;
+                //this.$set(this.$data, "counter",  this.$data.counter + 1)
+                
+                // 버튼을 누르면 store의 action 호출.
+                // store.dispatch("액션명", 액션값);
+                store.dispatch( "increment",  +10)
+            },
+            decrement: function(event){
+                //this.$data.counter = this.$data.counter - 1;
+                //this.$set(this.$data, "counter", this.$data.counter - 1)
+                
+                // 버튼을 누르면 store의 action 호출.
+                // dispatch("액션명", 호출값);
+                store.dispatch("decrement", -10)
+            },
+        },
+        components: {
+    
+        }, 
+        computed: {
+            /* computed를 사용하여 store의 state를 모니터링하게 작성
+             * computed 이름과 data 이름이 중복되면 안된다. 한쪽에만 있어야 한다
+             */
+            welcome: function(){
+                return store.getters.welcome;
+            },
+            counter: function(){
+                return store.getters.counter;
+            },
+        },
+        watch: {
+    
+        },
+        mounted: function() {
+            console.log("mounted");
+        },
+        updated: function() {
+            console.log("updated");
+        },
+    });
+    
+</script>

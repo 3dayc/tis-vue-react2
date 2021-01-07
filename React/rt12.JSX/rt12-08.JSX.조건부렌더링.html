@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>조건부 렌더링</title>
+
+    <link rel="stylesheet" href="../css/reset.css"/>
+</head>
+
+<body>
+    <xmp>
+        조건부 렌더링
+        
+        아래 사이트의 코드를 이용하여 클래스 컴포넌트를 만들어 본다.
+        참고: https://reactjs.org/docs/conditional-rendering.html
+
+        Greeting 컴포넌트에서 isLoggedIn 의 값에 따라 리턴하는 컴포넌트 분기한다.
+        isLoggedIn 은 부모로 부터 받는 값이다.
+        
+        부모로부터 받은 props 를 자식 컴포넌트에 넘기시오. 
+            Greeting 컴포넌트에서 UserGreeting 컴포넌트로 모든 props를 넘기시오.
+            Greeting 컴포넌트에서 GuestGreeting 컴포넌트로 모든 props를 넘기시오.
+        
+        Greeting 컴포넌트의 인자로 isLoggedIn 을 넘긴다.  
+        isLoggedIn 값으로는 true 를 넘기도록 설정하시오.
+        
+        작업 순서.
+        1. UserGreeting 컴포넌트 만들기
+        2. GuestGreeting 컴포넌트 만들기
+        3. Greeting 컴포넌트 만들기
+        4. 화면에 Greeting 컴포넌트 붙이기 
+    </xmp>
+    <hr>
+
+    <div id="app"></div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react" */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom" */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux" */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux" */</script>
+<script type="text/babel">
+    //import React from "react"
+    //import ReactDOM from "react-dom"
+    
+    console.log(React)
+    console.log(ReactDOM)
+    
+    class UserGreeting extends React.Component {
+        render() {
+            return (
+                <h1>Welcome back! isLoggedIn : {this.props.isLoggedIn + ""}</h1>
+            )
+        }
+    }
+    
+    class GuestGreeting extends React.Component {
+        render() {
+            return (
+                <h1>Please sign up. isLoggedIn : {this.props.isLoggedIn + ""}</h1>
+            )
+        }
+    }
+    
+    class Greeting extends React.Component {
+        render() {
+            //isLoggedIn 의 값에 따라 리턴하는 컴포넌트 분기한다.
+            //isLoggedIn 은 부모로 부터 받는 값이다.
+            const isLoggedIn = this.props.isLoggedIn
+
+            // 부모로부터 받은 props 를 자식 컴포넌트에 넘기시오. 
+            if (isLoggedIn) {
+                return <UserGreeting {...this.props}></UserGreeting>
+            }
+            else {
+                    <GuestGreeting {...this.props}></GuestGreeting>
+            }
+        }
+    }
+    
+    // Greeting 컴포넌트의 인자로 isLoggedIn 을 넘긴다.  isLoggedIn 값으로는 true 를 넘기도록 설정하시오
+    ReactDOM.render(
+        <Greeting isLoggedIn={true}></Greeting>, document.getElementById("app")
+    )
+    
+</script>

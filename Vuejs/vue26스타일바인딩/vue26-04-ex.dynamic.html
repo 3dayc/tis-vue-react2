@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05-12</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- CSS import -->
+    <link rel="stylesheet" href="../css/reset.css">
+
+    <style>
+        #app {
+            width: 150px;
+            height: 150px;
+            text-align: center;
+        }
+
+        #app.ready {
+            background: pink;
+            color: brown;
+        }
+
+        #app.active {
+            background: green;
+            color: tomato;
+            border-radius: 30%;
+        }
+
+        #app.done {
+            background: yellow;
+            color: blue;
+            border-radius: 50%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <pre>
+	  Vue.js 에서 class 속성 적용 방식.
+	  1. 단일 class 적용. ex) class="active" 
+	     ==> 문자열로 처리 
+	  2. 다중 class 적용. ex) class="active done"
+	     ==> true / false 로 처리 
+
+
+
+      미리 설정되어 있는 CSS 를 사용하여 만드시오.
+
+      div#app을 클릭하면 state값을 변경하는 메소드를 구성하세요.
+      ready => active => done => ready
+
+      #app {width:150px; height:150px; text-align:center;}
+      #app.ready {background:pink; color:brown;}
+      #app.active {background:green; color:tomato; border-radius:30%;}
+      #app.done {background:yellow; color:blue; border-radius:50%;}
+    </pre>
+    <!-- div#app을 클릭하면 state값을 변경하는 메소드를 구성하세요.
+        ready => active => done => ready -->
+    <div id="app" v-bind:class="state" v-on:click="change">
+        {{msg}}
+    </div>
+</body>
+
+</html>
+
+<!-- vue 플러그인 임포트   -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"> /* JSX를 자바스크립트로 변환 */</script>
+<script src="https://unpkg.com/vue@2.5.16/dist/vue.js">/* vue 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vuex@3.3.0/dist/vuex.js"> /* vuex 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vue-router@3.1.6/dist/vue-router.js"> /* vue 라우터 플러그인 임포트 */</script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"> /* axios 플러그인 임포트 */</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> /* jQuery library */</script>
+<script>
+    new Vue({
+        /* edtmc^2w */
+        el: "#app",
+        data: {
+            state:"ready",
+            //msg: "ready",
+        },
+        //template: ``,
+        methods: {
+            change: function(event){
+                console.log(event.target);
+
+                if( this.$data.state === "ready") {
+                    // this.$data.state = "active"
+                    this.$set(this.$data, "state", "active" );
+                    //this.$set(this.$data, "msg", "active");
+                }
+                else if (this.$data.state === "active") {
+                    // this.$data.state = "done"
+                    this.$set(this.$data, "state", "done");
+                    //this.$set(this.$data, "msg", "done");
+                }
+                else if (this.$data.state === "done") {
+                    // this.$data.state = "ready"
+                    this.$set(this.$data, "state", "ready");
+                    //this.$set(this.$data, "msg", "ready");
+                }
+            }
+        },
+        components: {
+    
+        }, 
+        computed: {
+            msg: function(){
+                return this.$data.state;
+            }
+        },
+        watch: {
+    
+        },
+        mounted: function() {
+            console.log("mounted");
+        },
+        updated: function() {
+            console.log("updated");
+        },
+    });
+    
+</script>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- CSS import -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <style>
+        .strong {color:red; font-weight:bold; font-size:1.2em;}
+        label { display: inline-block; width: 80px;}
+        #app > div { margin: 5px 0 ;}
+    </style>
+</head>
+<body>
+    <xmp>
+        리액트에서 CRUD 방법을 학습한다.
+
+        CRUD 학습을 위해서 아래 사항에 대해서 미리 학습한다.
+            1. array.map() 사용법
+            2. array.reduce() 사용법
+            3. array.filter() 사용법
+
+        테스트 기본 데이터
+            const array = [
+                {id:1, name: "슈퍼맨", power: 100},
+                {id:2, name: "아쿠아맨", power: 300},
+                {id:3, name: "스파이더맨", power: 500},
+                {id:4, name: "배트맨", power: 30},
+            ]
+
+            array 에서 최대값 id 찾기
+                Object Array 에서 최대값 구하는 방법은 구글 검색을 이용한다.
+                ==> 검색조건: javascript object array max
+
+                방법 1. reduce() 메서드 사용.
+                    var maxObj = array.reduce( function(prev, next){
+                        return prev.id > next.id ? prev:  next  // 최대값 id가 있는 객체
+                        return prev.id < next.id ? prev:  next  // 최소값 id가 있는 객체
+                    })
+                    var newid  = maxObj.id + 1
+
+                방법 2. map()과 Math.max()를 사용하는 방법
+                    var arrIds = array.map( function(el){
+                        return el.id
+                    })
+                    var newid  = Math.max(...arrIds) + 1
+
+
+        작업 순서
+
+        1. CrudInput 컴포넌트 만들기
+            state = {
+                /* CrudInput 에서만 사용될  상태값 */
+                user: {
+                    name: "",
+                    power: 0,
+                },
+            }
+
+        2. CrudList 컴포넌트 만들기
+            "rt12-09.JSX.반복문.html"를 참고하여 코드를 완성하시오.
+
+            power가 300이상인 사람은 글자색을 red로 bold스타일로 출력하세요.
+            예시)
+            render() {
+                const items = this.props.items;
+                const arrs = items.map( function(item, index){
+                    return (
+                        <li key={index}>{item.id}</li>
+                    )
+                })
+                return (
+                    <div>
+                        {arrs}
+                    </div>
+                )
+            }
+
+        3. CrudApp 컴포넌트 만들기
+
+            state = {
+                /* 컴포넌트간 공유 데이터 */
+                list: [
+                ],
+            }
+            func = {
+                /* 하위 컴포넌트로 전돨될 메서드 */
+                doIns(item){
+                    // ...생략
+                },
+                doUp(id){
+                    // ...생략
+                },
+                doDown(id){
+                    // ...생략
+                },
+                doDel(id){
+                    // ...생략
+                },
+                doEdit(paramMan){
+                    // ...생략
+                },
+            }
+            constructor(props){
+                super()
+                // this 바인드
+                this.func.doUp   = this.func.doUp.bind(this)
+                this.func.doDown = this.func.doDown.bind(this)
+                this.func.doDel  = this.func.doDel.bind(this)
+                this.func.doEdit = this.func.doEdit.bind(this)
+                this.func.doIns  = this.func.doIns.bind(this)
+            }
+            render(){
+                return (
+                    <CrudInut {...this.state} {...this.func}>
+                    </CrudInput>
+                    <CrudList {...this.state} {...this.func}>
+                    </CrudList>
+                )
+            }
+
+        4. ReactDOM 사용하여 화면 붙이기
+            ReactDOM.render( <CrudApp></CrudApp>, document.getElementById("app") )
+
+
+        5. CrudListItem 컴포넌트 만들기
+            5-1. 편집여부를 확인하기 위한 상태값(state) 만들기
+                state = {
+                    isEditMode: false
+                }
+
+            5-2. formView: 데이터 표시용 JSX
+            <tr key={item.id} className={"strong"}>
+                    <td>{item.id}</td>
+                    <td>{item.name}</td>
+                    <td>{item.power}</td>
+                    <td>
+                        <button onClick={this.doDel}>Del</button>
+                        <button onClick={this.doUp}>Power Up</button>
+                        <button onClick={this.doDown}>Power Down</button>
+                        <button onClick={this.doEdit}>Edit</button>
+                    </td>
+            </tr>
+
+            5-3. formEdit:  데이터 편집용 JSX
+            <tr key={item.id} className={"strong"}>
+                    <td>{item.id}</td>
+                    <td>
+                        <input
+                            type="text"
+                            name="name"
+                            ref={this.refUserName }
+                            defaultValue={item.name}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            name="power"
+                            ref={this.refUserPower }
+                            defaultValue={item.power}
+                        />
+                    </td>
+                    <td>
+                        <button onClick={this.doUp}>Power Up</button>
+                        <button onClick={this.doDown}>Power Down</button>
+                        <button onClick={this.doSave}>Save</button>
+                    </td>
+            </tr>
+
+    </xmp>
+    <hr>
+    <div id="app">
+        <div>
+            <h1>Creat Read Update Delete</h1>
+            <div>
+                <label for="">Name : </label>
+                <input type="text">
+            </div>
+            <div>
+                <label for="">Power : </label>
+                <input type="text">
+            </div>
+            <button>Add</button>
+            <hr>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NAME</th>
+                    <th>POWER</th>
+                    <th>CRUD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="">
+                    <td>1</td>
+                    <td>슈퍼맨</td>
+                    <td>100</td>
+                    <td>
+                        <button>Del</button>
+                        <button>Power Up</button>
+                        <button>Power Down</button>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+                <tr class="strong">
+                    <td>2</td>
+                    <td>아쿠아맨</td>
+                    <td>300</td>
+                    <td>
+                        <button>Del</button>
+                        <button>Power Up</button>
+                        <button>Power Down</button>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+                <tr class="strong">
+                    <td>3</td>
+                    <td>스파이더맨</td>
+                    <td>500</td>
+                    <td>
+                        <button>Del</button>
+                        <button>Power Up</button>
+                        <button>Power Down</button>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+                <tr class="strong">
+                    <td>4</td>
+                    <td>배트맨</td>
+                    <td>30</td>
+                    <td>
+                        <button>Del</button>
+                        <button>Power Up</button>
+                        <button>Power Down</button>
+                        <button>Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux"; */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux"; */</script>
+<script type="text/babel">
+    //import React from "react";
+    //import ReactDOM from "react-dom"
+    
+    console.log(React);
+    console.log(ReactDOM);
+    
+    class CrudInput extends React.Component {
+    
+        static defaultProps = {  /*  props의 디폴트 값 설정 */  } 
+        static propsTypes = {  /* props의 프로퍼티 타입 설정 */ } 
+        state = {
+            // 상태값(변수)을 정의한다.
+            user: {
+                name: null,
+                power: 0,
+            },
+        }
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+    
+        }
+        func = {
+            // fucn에 정의된 메서드는 반드시 constructor에서 this bind() 해야 한다.
+    
+        }
+        constructor(props) {
+            super();
+            // this 바인딩
+            
+            // ref 만들기
+            this.refName = React.createRef();
+            this.refPower = React.createRef();
+        }
+        componentDidMount() {
+            // 마운트 완료 후에  : 페이지 load 될 때 한번
+        }
+        componentDidUpdate(prevProps, prevState) {
+            // 업데이트 완료 후에 : 여러번, state 가 변경될 때마다
+        }
+        componentWillUnmount() {
+            // 언마운트 완료 후에 : 페이지 unload 될 때 한번
+        }
+        doIns = (event)=>{
+            // 유효성 검사.
+            debugger;
+            // 부모 state.list 에 추가 
+            const obj = {
+                id: null,
+                name: this.refName.current.value,
+                power: Number(this.refPower.current.value),
+            }
+            this.props.doIns( obj );
+            // 초기화 
+            this.refName.current.value = "";
+            this.refPower.current.value = "";
+        }
+        render() {
+            return (
+                <div>
+                    <h1>Creat Read Update Delete</h1>
+                    <div>
+                        <label htmlFor="">Name : </label>
+                        <input type="text" ref={this.refName} placeholder="이름을 입력하세요" />
+                    </div>
+                    <div>
+                        <label htmlFor="">Power : </label>
+                        <input type="text" ref={this.refPower} placeholder="숫자만 입력하세요" />
+                    </div>
+                    <button onClick={this.doIns}>Add</button>
+                </div>
+            );
+        }
+    }
+    //export default CrudInput;
+    
+    class CrudList extends React.Component {
+    
+        static defaultProps = {  /*  props의 디폴트 값 설정 */  } 
+        static propsTypes = {  /* props의 프로퍼티 타입 설정 */ } 
+        state = {
+            // 상태값(변수)을 정의한다.
+    
+        }
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+    
+        }
+        func = {
+            // fucn에 정의된 메서드는 반드시 constructor에서 this bind() 해야 한다.
+    
+        }
+        constructor(props) {
+            super(props);
+            // this 바인딩
+            
+            // ref 만들기
+            
+        }
+        componentDidMount() {
+            // 마운트 완료 후에  : 페이지 load 될 때 한번
+        }
+        componentDidUpdate(prevProps, prevState) {
+            // 업데이트 완료 후에 : 여러번, state 가 변경될 때마다
+        }
+        componentWillUnmount() {
+            // 언마운트 완료 후에 : 페이지 unload 될 때 한번
+        }
+        render() {
+            const list = this.props.list; // CrudApp.state.list
+
+            const arrs = list.map((item, index)=>{
+                // item = {id:"", name:"", power:""}
+                return(
+                    /* props = state + func  */
+                    <CrudListItem key={index} index={index} item={ item}  {...this.props} >
+                    </CrudListItem>
+                );
+            })
+
+            return (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>POWER</th>
+                            <th>CRUD</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {arrs}
+                    </tbody>
+                </table>
+            );
+        }
+    }
+    //export default CrudList;
+    
+    class CrudListItem extends React.Component {
+    
+        static defaultProps = {  /*  props의 디폴트 값 설정 */  } 
+        static propsTypes = {  /* props의 프로퍼티 타입 설정 */ } 
+        state = {
+            // 상태값(변수)을 정의한다.
+            isEditMode: false,
+        }
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+    
+        }
+        func = {
+            // fucn에 정의된 메서드는 반드시 constructor에서 this bind() 해야 한다.
+    
+        }
+        constructor(props) {
+            super(props);
+            // this 바인딩
+            
+            // ref 만들기
+            this.refName  = React.createRef();
+            this.refPower = React.createRef();
+            
+        }
+        componentDidMount() {
+            // 마운트 완료 후에  : 페이지 load 될 때 한번
+        }
+        componentDidUpdate(prevProps, prevState) {
+            // 업데이트 완료 후에 : 여러번, state 가 변경될 때마다
+        }
+        componentWillUnmount() {
+            // 언마운트 완료 후에 : 페이지 unload 될 때 한번
+        }
+        doDel = (event) => {
+            // state 변경. state 어디에 있나? 부모 있다. 부모 메서드 호출
+            // 부모 콜백 메서드 호출 
+            const { index, item } = this.props; // 분해 할당.
+            this.props.doDel(index, item);
+        }
+        doUp = (event) => {
+            const { index, item } = this.props; // 분해 할당.
+            this.props.doUp(index, item);
+        }
+        doDown = (event) => {
+            const { index, item } = this.props; // 분해 할당.
+            this.props.doDown(index, item);
+        }
+        doEdit = (event) => {
+            //this.state.isEditMode = !this.state.isEditMode;
+            this.setState({
+                ...this.state,
+                isEditMode: !this.state.isEditMode
+            });
+        }
+        doSave = (event) => {
+            //this.state.isEditMode = !this.state.isEditMode;
+            this.setState({
+                ...this.state,
+                isEditMode: !this.state.isEditMode
+            });
+
+            // newitem 만들기 
+            let newitem = this.props.item;
+            newitem.name = this.refName.current.value;
+            newitem.power = Number(this.refPower.current.value);
+
+            // 부모 콜백 메서드 호출.
+            this.props.doSave( newitem );
+        }
+        render() {
+            const {index, item} = this.props; // 분해 할당. 
+
+            const formView = (
+                <tr className="" key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.name}</td>
+                    <td>{item.power}</td>
+                    <td>
+                        <button onClick={this.doDel}>Del</button>
+                        <button onClick={this.doUp}>Power Up</button>
+                        <button onClick={this.doDown}>Power Down</button>
+                        <button onClick={this.doEdit}>Edit</button>
+                    </td>
+                </tr>
+            );
+            const formEdit = (
+                <tr className="" key={item.id}>
+                    <td>{item.id}</td>
+                    <td>
+                        <input type="text" 
+                               name="name"
+                               ref={this.refName} 
+                               defaultValue={item.name} />
+                    </td>
+                    <td>
+                        <input type="text" 
+                               name="power"
+                               ref={this.refPower} 
+                               defaultValue={item.power} />
+                    </td>
+                    <td>
+                        <button onClick={this.doUp}>Power Up</button>
+                        <button onClick={this.doDown}>Power Down</button>
+                        <button onClick={this.doSave}>Save</button>
+                    </td>
+                </tr>
+            );
+
+            if( this.state.isEditMode ){
+                return formEdit;
+            }
+            else {
+                return formView;
+            }
+        }
+    }
+    //export default CrudListItem;
+    
+    class CrudApp extends React.Component {
+    
+        static defaultProps = {  /*  props의 디폴트 값 설정 */  } 
+        static propsTypes = {  /* props의 프로퍼티 타입 설정 */ } 
+        state = {
+            // 상태값(변수)을 정의한다.
+            list: [
+                { id: 1, name: "슈퍼맨", power: 100 },
+                { id: 2, name: "아쿠아맨", power: 300 },
+                { id: 3, name: "스파이더맨", power: 500 },
+                { id: 4, name: "배트맨", power: 30 },
+            ],
+        }
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+    
+        }
+        func = {
+            // fucn에 정의된 메서드는 반드시 constructor에서 this bind() 해야 한다.
+            doIns(obj){
+                // 작업순서
+                // 1. this.state.list에서 max(id) 구하기
+                // 2. this.state.list에 obj 추가;
+
+                /* 1. this.state.list에서 max(id) 구하기 
+                    reduce() 사용하는 방법 
+                    map() 과 Math.max() 를 사용하는 방법
+                */
+               if( this.state.list.length>0) {
+                   const maxitem = this.state.list.reduce( (prev, next)=>{
+                        return prev.id > next.id ? prev: next; // 최대값 id가 있는 객체 
+                   })
+                   obj.id = maxitem.id + 1;
+               }
+               else {
+                   obj.id = 1;
+               }
+
+                // 신규 리스트 생성 :  push() 나 스프레드 연산자 활용해서
+               const newlist = [...this.state.list, obj];
+               this.setState({
+                   ...this.state,
+                   list: newlist,
+               })
+            },
+            doDel(index, item){
+                const r = window.confirm("정말로 삭제하시겠습니까?")
+                if( !r ) return ;
+
+                // 배열에서 삭제. splice 나 filter 를 사용한다 
+                // 삭제할 item을 제외한 배열 만들기.
+                const id = item.id; 
+                const newlist = this.state.list.filter( (item, index)=>{
+                    return item.id !== id;
+                })
+                this.setState({
+                    ...this.state, 
+                    list: newlist
+                })
+            },
+            doUp(index, item) {
+                //100씩 증가
+                const id = item.id;
+                const newlist = this.state.list.filter((item, index) => {
+                    if( item.id === id) {
+                        item.power = Number(item.power) + 100;
+                    }
+                    return item;
+                })
+                this.setState({
+                    ...this.state,
+                    list: newlist
+                })
+            },
+            doDown(index, item) {
+                //50씩 감소
+                const id = item.id;
+                const newlist = this.state.list.filter((item, index) => {
+                    if (item.id === id) {
+                        item.power = Number(item.power) - 50;
+                    }
+                    return item;
+                })
+                this.setState({
+                    ...this.state,
+                    list: newlist
+                })
+            },
+            doSave(newitem) {
+                const id = newitem.id;
+                const newlist = this.state.list.filter((item, index) => {
+                    if (item.id === id) {
+                        return newitem
+                    }
+                    return item;
+                })
+                this.setState({
+                    ...this.state,
+                    list: newlist
+                })
+            }
+    
+        }
+        constructor(props) {
+            super(props);
+            // this 바인딩
+            this.func.doIns = this.func.doIns.bind(this);
+            this.func.doDel = this.func.doDel.bind(this);
+            this.func.doUp  = this.func.doUp.bind(this);
+            this.func.doDown = this.func.doDown.bind(this);
+            this.func.doSave = this.func.doSave.bind(this);
+            
+            // ref 만들기
+            
+        }
+        componentDidMount() {
+            // 마운트 완료 후에  : 페이지 load 될 때 한번
+        }
+        componentDidUpdate(prevProps, prevState) {
+            // 업데이트 완료 후에 : 여러번, state 가 변경될 때마다
+        }
+        componentWillUnmount() {
+            // 언마운트 완료 후에 : 페이지 unload 될 때 한번
+        }
+        handler = (event)=>{
+            // 이벤트 핸들러는 화살표 함수로 만들면 this bind()를 생략해도 된다
+            console.log(event.target);//
+        }
+        render() {
+            return (
+                <div>
+                    <CrudInput {...this.func}></CrudInput>
+                    <hr />
+                    <CrudList {...this.state} {...this.func}></CrudList>
+                </div>
+            );
+        }
+    }
+    //export default CrudApp;
+
+    ReactDOM.render( <CrudApp></CrudApp>, document.getElementById("app") );
+
+</script>

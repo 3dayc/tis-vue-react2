@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>서버의 데이터를 대상 엘리먼트에 삽입하기</title>
+
+    <style>
+        #app>div {
+            width: 200px;
+            margin: 3px;
+            float: left;
+            margin: 40px 0 0 40px;
+        }
+
+        hr {
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin: 40px 0 0 30px;">
+        <a href="#" onClick="window.open('../vue01docs/npm사용법.html','npm사용법','width=800,height=400,toolbar=no,menubar=no,scrollbars=no,resizable=yes');return false;" rel="nofollow">npm 사용법</a>
+    </div>
+    <xmp>
+    외부 함수 호출 기능을 추가하기 위해서는 서버 기능이 필요합니다.
+    실행 전에 서버를 실행하세요. ex) node server.js
+
+    1. 필요한 프로그램 설치
+        node.js 설치
+            node 설치 여부 확인
+            node -V
+
+        git 설치
+            git bash 셀 설치 여부 확인
+
+    2. VSCode 터미널 bash 셀 설정
+
+    3. bash셀 터미널 열기
+
+    4. "vue09서버통신" 폴더 에서 bash셀 터미널 열기
+
+    5. 파일 목록 확인. server.js 있는지 확인
+    $ ls
+    item.xml item.html item.json item.txt loading.gif server.js
+
+    6. server.js 가 보이면 서버 실행
+    $ node server.js
+    start server - anonymous function
+
+    6. 서버 실행 여부 확인. 브라우저를 실행하고 아래 url를 붙여넣고 실행한다.
+    http://localhost:5050/text
+
+    화면에 아래와 같이 나오면 서버가 정상적으로 실행된 것입니다.
+        짜장면
+        짬뽕
+        기스면
+        탕수육
+    </xmp>
+    <hr>
+    <div id="app">
+        <h2>서버 response 형태 확인하기[ text / html / json / xml]</h2>
+        <div>
+            <a href="http://localhost:5050/text" target="_blank">http://localhost:5050/text</a>
+        </div>
+        <div>
+            <a href="http://localhost:5050/html" target="_blank">http://localhost:5050/html</a>
+        </div>
+        <div>
+            <a href="http://localhost:5050/json" target="_blank">http://localhost:5050/json</a>
+        </div>
+        <div>
+            <a href="http://localhost:5050/xml" target="_blank">http://localhost:5050/xml</a>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+

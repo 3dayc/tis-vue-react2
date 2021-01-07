@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/reset.css"/>
+
+    <style>
+        #container {
+            padding: 50px;
+            background-color: #eee;
+        }
+
+        #container h1 {
+            font-size: 144x;
+            font-family: "맑은고딕코딩";
+            color: #0080a8;
+        }
+    </style>
+</head>
+
+<body>
+    <xmp>
+        React.createElement() 를 사용하여 html 태그 생성 방법을 알아본다.
+
+        React.createElement() 를 사용하여 #wrap1 에 아래의 태그를 만드시오
+        <h1 id="greeting">
+            Hello, React!!!
+        </h1>
+
+        React.createElement() 를 사용하여 #wrap2 에 아래의 태그를 만드시오
+        <h1 id="greeting">
+            <p>
+                Test!!!
+            </p>
+        </h1>
+    </xmp>
+    <hr>
+
+    <div id="wrap1"></div>
+    <hr>
+    <div id="wrap2"></div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux"; */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux"; */</script>
+<script type="text/babel">
+    /* 
+    <h1 id="greeting">
+        Hello, React!!!
+    </h1>
+
+    React.createElement(
+        "h1", 
+        { id: "greeting" }, 
+        "Hello, React!!!"
+    );
+
+
+    <h1 id="greeting">
+        <p class="aa">
+            Test!!!
+        </p>
+    </h1>
+
+    React.createElement(
+        "h1", 
+        { id: "greeting" }, 
+        React.createElement(
+            "p", 
+            { className="aa"}, 
+            "Test!!!"
+        )
+    );
+
+    */
+
+    //import React from 'react';
+    //import ReactDOM from 'react-dom'
+    
+    console.log(React)
+    console.log(ReactDOM)
+    
+    class Greeting extends React.Component {
+    
+        render() {
+            /*        
+            <h1 id="greeting">
+                <p >
+                    Test!!!
+                </p>
+            </h1>
+            */
+            return React.createElement(
+                "h1", /* 태그명 */
+                {id:"greeting"}, /* 태그 속성들 */
+                React.createElement(
+                    "p", /*  태그명 */
+                    {}, /*태그 속성들 */
+                    "Test!!!"
+                )
+            )
+        }
+    }
+    
+    ReactDOM.render(
+        <Greeting/>, document.getElementById("wrap1")
+    )
+</script>

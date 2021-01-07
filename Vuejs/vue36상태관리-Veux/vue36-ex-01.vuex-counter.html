@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuex Sample</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- CSS import -->
+    <link rel="stylesheet" href="../css/reset.css">
+
+    <style>
+        .component-parent {
+            width: 50%;
+            background-color: lightblue;
+            padding: 5%;
+        }
+
+        .component-child {
+            width: 80%;
+            background-color: lightgray;
+            padding: 5% 5% 10% 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <xmp>
+
+        예제 "34-ex-01-counter.html" 를 Vuex를 사용하는 방법으로 바꾸어 본다.
+
+        이 앱의 특징은 다음과 같습니다.
+          + 버튼을 클릭하면 카운터가 올라가고
+          - 버튼을 클릭하면 카운터가 감소됩니다.
+
+          child-componet 템플릿 태그는 아래와 같이 설정하시오.
+          <div class="component-child">
+              Child counter : {{ num }} <br>
+              <button name="child" v-on:click="addCounter">+</button>
+              <button name="child" v-on:click="subCounter">-</button>
+          </div>
+        
+        axios를 이용하여 외부 함수 호출 기능 추가하기
+        외부 함수 호출 기능을 추가하기 위해서는 서버 기능이 필요합니다.
+        
+
+        1. 필요한 프로그램 설치
+            node.js 설치
+            node 설치 여부 확인
+            node -V
+            
+            git 설치
+            git bash 셀 설치 여부 확인
+        
+        2. bash셀 터미널 열기
+            bash 셀 설정
+        
+        3. bash셀 터미널에서 폴더 이동
+        $ cd vue09서버통신
+        
+        4. 파일 목록 확인. server.js 있는지 확인
+        $ ls
+        ht08-01.form태그.html item.xml item.html item.json item.txt server.js
+        
+        5. server.js 가 보이면 서버 실행
+        $ node server.js
+        start server - anonymous function
+
+        6. 브라우저로 서버 실행 여부 확인
+        http://localhost:5050/counter   ==> 1 씩 증가 
+        http://localhost:5050/counter?step=10  ==> 10 씩 증가 
+
+
+    </xmp>
+    <hr>
+
+    <div id="app" class="component-parent">
+        Parent counter : {{ counter }} <br>
+        <button name="parent" v-on:click="addCounter(this.event, +10)">+</button>
+        <button name="parent" v-on:click="subCounter(this.event, -10)">-</button>
+        <p></p>
+
+        <!-- Child 컴포넌트를 등록하고 counter 데이터 속성을 props로 전달한다. -->
+        <component-child
+            v-on:add-counter="addCounter"
+            v-on:sub-counter="subCounter">
+        </component-child>
+    </div>
+</body>
+
+</html>
+
+<!-- vue 플러그인 임포트   -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"> /* JSX를 자바스크립트로 변환 */</script>
+<script src="https://unpkg.com/vue@2.5.16/dist/vue.js">/* vue 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vuex@3.3.0/dist/vuex.js"> /* vuex 플러그인 임포트 */</script>
+<script src="https://unpkg.com/vue-router@3.1.6/dist/vue-router.js"> /* vue 라우터 플러그인 임포트 */</script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"> /* axios 플러그인 임포트 */</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> /* jQuery library */</script>
+<script>
+
+    // Store(Vuex 인스턴스) 만들기
+    var store = new Vuex.Store({
+        actions: {/* 외부 api 호출 */
+            addCounter: function(mutations, param){
+                // 외부 api 비동기 호출
+                axios({
+                    url: "http://localhost:5050/counter",  // 호출되는 서버 주소.
+                    method: "get",       // request method: get, post, delete, put
+                    params: {step: param, data2: "test2" },  // 서버로 보내는 데이터. { data1:"test1", data2:"test2" }
+                    timeout: 30000,    // 최대 대기 시간: 30초. 30초 이상이 되면 fail 부분이 실행됨.
+                    responseType: "text",  // response로 넘어오는 데이터 형태: text, html, xml, json, jsonp, script
+                })
+                .then((res) => {
+                    console.log(res.data);
+
+                    // mutations.commit() 호출
+                    mutations.commit("addCounter", param);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
+            subCounter: function (mutations, param) {
+                // 외부 api 비동기 호출
+                axios({
+                    url: "http://localhost:5050/counter",  // 호출되는 서버 주소.
+                    method: "get",       // request method: get, post, delete, put
+                    params: {step: param, data2: "test2" },  // 서버로 보내는 데이터. { data1:"test1", data2:"test2" }
+                    timeout: 30000,    // 최대 대기 시간: 30초. 30초 이상이 되면 fail 부분이 실행됨.
+                    responseType: "text",  // response로 넘어오는 데이터 형태: text, html, xml, json, jsonp, script
+                })
+                .then((res) => {
+                    console.log(res.data);
+
+                    // mutations.commit() 호출
+                    mutations.commit("subCounter", param);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            },
+        },
+        mutations: {
+            // store.state 변경
+            // 첫번째 인자는 무조건 state
+            addCounter: function (state, param) {
+                // this.$set( this.$data, "counter", this.$data.counter + param )
+                state.counter = state.counter + param;
+            },
+            subCounter: function (state, param) {
+                // this.$set( this.$data, "counter", this.$data.counter + param )
+                state.counter = state.counter + param;
+            },
+        },
+        state : {
+            counter: 10,
+        },
+        getters: {
+            // 첫번째 인자는 무조건 state
+            counter: function(state){
+                return state.counter;
+            },
+        },
+    });
+
+    var componentChild = {
+        /* pdtmc^2w */
+        props: [],
+        data: function () {
+            return {
+            }
+        },
+        template: `
+          <div class="component-child">
+              Child counter : {{ num }} <br>
+              <button name="child" v-on:click="addCounter">+</button>
+              <button name="child" v-on:click="subCounter">-</button>
+          </div>
+        `,
+        methods: {
+            addCounter: function (event) {
+                console.log(event.target);
+                // 이벤트 발생시키기
+                // 부모는 2개의 인자를 달라고 한다. 
+                //this.$emit("add-counter", event, +1)
+                store.dispatch("addCounter", +1)
+            },
+            subCounter: function (event) {
+                console.log(event.target);
+                // 이벤트 발생시키기
+                // 부모는 2개의 인자를 달라고 한다. 
+                //this.$emit("sub-counter", event, -1)
+                store.dispatch("subCounter", -1)
+            },
+        },
+        components: {
+        },
+        computed: {
+            num : function(){
+                return store.getters.counter;
+            }
+        },
+        watch: {
+
+        },
+    };
+
+    new Vue({
+        /* edtmc^2w */
+        el: "#app",
+        data: {
+            //counter: 0,
+        },
+        //template: ``,
+        methods: {
+            addCounter: function (event, param) {
+                //this.$data.counter = this.$data.counter + param;
+                //this.$set(this.$data, "counter", this.$data.counter + param)
+                store.dispatch("addCounter", +10)
+            },
+            subCounter: function (event, param) {
+                //this.$data.counter = this.$data.counter + param;
+                //this.$set(this.$data, "counter", this.$data.counter + param)
+                store.dispatch("subCounter", -10)
+            },
+        },
+        components: {
+            /* 인스턴스가 사용할 컴포넌트 등록 */
+            "component-child": componentChild
+        },
+        computed: {
+            // store 상태 구독 설정
+            counter: function() {
+                return store.getters.counter;
+            },
+        },
+        watch: {
+
+        },
+        mounted: function () {
+            console.log("mounted");
+        },
+        updated: function () {
+            console.log("updated");
+        },
+    });
+
+</script>

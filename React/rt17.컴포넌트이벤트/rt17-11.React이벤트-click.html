@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/reset.css"/>
+
+    <style>
+        .App {
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <xmp>
+        이 예제에서 학습하고자 하는 내용
+            이벤트 핸들러 안에서 this 가 컴포넌트가 되기 하려면 어떻게?
+            constructor() 안에서 this를 bind 처리해야 한다.
+
+
+        컴포넌트 생성과 click 이벤트 핸들러 작성을 실습한다.
+
+        1. Greeting 컴포넌트 만들기
+            ...(중략)
+            let style1 = {...중략}
+            let style2 = {...중략}
+
+            return (
+                <div>
+                    <div style={style1} onClick={this.handlerClick1}>
+                        div1
+                    </div>
+                    <div style={style2} onClick={this.handlerClick2}>
+                        div2
+                    </div>                    
+                </div>
+            );
+
+        2. 스타일을 작성한다.
+            style1 = {
+                width: 100px;
+                height: 100px;
+                vertical-align: center;
+                line-height: 100px;
+                background: gray;
+            }
+            style2 = {
+                width: 100px;
+                height: 100px;
+                vertical-align: center;
+                line-height: 100px;
+                background: yellow;
+            }
+        3. div의 click 이벤트 핸들러를 작성하고 콘솔에 this 값을 출력한다.
+            handlerClick1(event){
+                console.log(this); // bind가 안되면 this는 undefined
+            }
+            handlerClick2 = (event)=>{
+                console.log(this); // bind가 되면 this는 Greeting 컴포넌트다
+            }
+            
+        4. ReactDOM 을 사용하여 화면에 붙인다.
+            예시)
+            ReactDOM.render( 
+                <Greeting></Greeting>
+                , 
+                document.getElementById("app") 
+            ) 
+    </xmp>
+
+    <div id="app"></div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux"; */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux"; */</script>
+<script type="text/babel">
+    //import React from "react";
+    //import ReactDOM from "react-dom"
+    
+    console.log(React);
+    console.log(ReactDOM);
+    
+    class Greeting extends React.Component {
+    
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+            styleCommon: {
+                width: "100px",
+                height: "100px",
+                verticalAlign: "center",
+                lineHeight: "100px",
+            },
+            get style1() {
+                return {
+                    ...this.styleCommon,
+                    background: "gray",
+                }
+            },
+            get style2() {
+                return {
+                    ...this.styleCommon,
+                    background: "yellow",
+                }
+            }
+        }
+        constructor(props) {
+            super(props);
+            // this 바인딩. 메서드와 컴포넌트 연결.
+            this.handlerClick2 = this.handlerClick2.bind( this );
+            
+            // ref 만들기
+            
+        }
+        handlerClick1 = (event)=>{
+            // 이벤트 핸들러는 화살표 함수로 만들면 this bind()를 생략해도 된다
+            console.log(this);// Greeting 컴포넌트
+        }
+        handlerClick2(event) {
+            // 이벤트 핸들러는 화살표 함수로 만들면 this bind()를 생략해도 된다
+            console.log(this);// ???
+        }
+        render() {
+            return (
+                <div>
+                    <div style={this.style.style1} onClick={this.handlerClick1}>
+                        div1
+                    </div>
+                    <div style={this.style.style2} onClick={this.handlerClick2}>
+                        div2
+                    </div>
+                </div>
+            );
+        }
+    }
+    
+    ReactDOM.render( <Greeting></Greeting>, document.getElementById("app") );
+</script>

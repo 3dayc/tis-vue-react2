@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <xmp>
+    ES6 코드를 브라우저에서 실행하려면 babel 이 필요하다.
+
+    < script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* ES5로 변환 */</script>
+    < script type="text/babel">
+        // ES6 코딩 
+    </script>
+    </xmp>
+</body>
+</html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* ES5로 변환 */</script>
+<script type="text/babel">
+    var points = [20, 30, 40];
+    var x1 = points[0];
+    var y1 = points[1];
+    var z1 = points[2];
+    console.log(x1, y1, z1); // 20, 30, 40
+
+    //           [ ] = [ ]
+    const [x2,y2,z2] = points; // points = [20, 30, 40];
+    console.log(x2, y2, z2); // 20, 30, 40
+
+    // 두번째  값 무시하기
+    const [x3, , z3] = points; // points = [20, 30, 40];
+    console.log(x3, z3); // 20 40
+
+    // 세번째 값 무시하기
+    const [x4, y4] = points; // points = [20, 30, 40];
+    console.log(x4, y4); // 20 30
+
+
+    //           {  } = {  }
+    const car = {
+        type: "t",
+        color: "S",
+        model: 2017,
+    }
+
+    // ES5
+    const type1 = car.type;
+    const color1 = car.color;
+    const model1 = car.model;
+    console.log(type1, color1, model1);
+
+    // ES6
+    const { type, color, model, gear } = car;
+    console.log(type, color, model, gear); //
+    
+    // ES6
+    const { type2, color2, model2, gear2 } = car;
+    console.log(type2, color2, model2, gear2); //
+
+    let p1 = { name: "홍길동", age:20, gender:"M"};
+    let { name: n, age: a, gender } = p1;
+    console.log(n, a, gender); // 홍길동, 20, M
+
+    
+</script>

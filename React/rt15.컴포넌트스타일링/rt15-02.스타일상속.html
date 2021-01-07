@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>react 번개 카운터</title>
+
+    <link rel="stylesheet" href="../css/reset.css"/>
+    <style>
+        h1,h2,h3,h4,h5,h6 {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <xmp>
+        styled-component 방식에서 자주 사용되는
+        스타일 상속 방법을 실습을 통해 배운다.
+
+    </xmp>
+
+    <div id="app">
+        <div style="width: 250px; background-color: black; padding: 0px; border-radius: 10px; text-align: center; margin: 0px; font-family: sans-serif; color: white;">
+            <h1 style="color: rgb(102, 255, 255); font-size: 50px;">2700</h1>
+            <h2 style="margin: 0px; padding: 0px; font-family: sans-serif; color: white;">번개</h2>
+            <h2 style="margin: 0px; padding: 0px; font-family: sans-serif; color: white; font-size: 38px;" >강조</h2>
+            <p  style="margin: 0px; padding: 0px; font-family: sans-serif; color: white; font-size: 17px; opacity: 0.5; ">
+                since you loaded this example
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom"; */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux"; */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux"; */</script>
+<script type="text/babel">
+    //import React from "react";
+    //import ReactDOM from "react-dom"
+
+    console.log(React);
+    console.log(ReactDOM);
+
+    class StyleInherit extends React.Component {
+
+        style = {
+            // 컴포넌트 내부에서 사용할 인라인 스타일을 정의한다.
+            styleDiv: {
+                // width: 250px; background-color: black; padding: 0px; border-radius: 10px; text-align: center; margin: 0px; font-family: sans-serif; color: white;
+                width: "250px", 
+                backgroundColor: "black", 
+                padding: "0px",
+                borderRadius: "10px",
+                textAlign: "center",
+                margin: "0px",
+                fontFamily: "sans-serif",
+                color: "white",
+            },
+            styleH1: {
+                // color: rgb(102, 255, 255); font-size: 50px;
+                color: "rgb(102, 255, 255)",
+                fontSize: "50px",
+            },
+            styleH2: {
+                // margin: 0px; padding: 0px; font-family: sans-serif; color: white;
+                margin: "0px",
+                padding: "0px",
+                fontFamily: "sans-serif",
+                color: "white",
+            },
+            get styleEmphasis() {
+                return {
+                    // margin: 0px; padding: 0px; font-family: sans-serif; color: white; font-size: 38px;
+                    ...this.styleH2,
+                    fontSize: "38px",
+                }
+            },
+            get styleP() {
+                return {
+                    // margin: 0px; padding: 0px; font-family: sans-serif; color: white; font-size: 17px; opacity: 0.5;
+                    ...this.styleEmphasis,
+                    fontSize: "17px",
+                    opacity: "0.5",
+                }
+            }
+        }
+        render() {
+            return (
+                <div style={this.style.styleDiv}>
+                    <h1 style={this.style.styleH1}>2700</h1>
+                    <h2 style={this.style.styleH2}>번개</h2>
+                    <h2 style={this.style.styleEmphasis}>강조</h2>
+                    <p style={this.style.styleP}>
+                        since you loaded this example
+                    </p>
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(<StyleInherit></StyleInherit>, document.getElementById("app") );
+</script>

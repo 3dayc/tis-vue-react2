@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>객체 리터럴 셀프 참조</title>
+</head>
+
+<body>
+    <xmp>
+
+    Self-references in object literals
+
+    문제점:
+        var lit = {
+            a: 'a',
+            b: this.a + 'b'
+        }
+        console.log(lit.a); // "a"
+        console.log(lit.b); // "ab" 가 출력되나요? 아니요. 어떻게 해야 할까?
+
+
+    원인:
+        리터럴을 사용한 객체 생성으로는 자신을 참조하는 값에 대한 원하는 값을 얻을 수 없습니다.
+        위의 코드에서 에러가 발생하는 이유는 b: this.a+'b'를 수행하는 시점에 아직 this가 존재하지 않기 때문입니다.
+        이 문제를 해결하기 위해서는 객체 생성 후 실행되게 하면 된다.
+        이것을 지연실행 또는 함수 호출시 평가 이라고 부릅니다. 즉, 함수를 사용하면 됩니다.
+
+    더 좋은 해결책:
+        getter 를 사용하면 해결이 가능하다.
+        get 구문은 객체의 프로퍼티를 그 프로퍼티를 가져올 때 호출되는 함수로 바인딩합니다.
+
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/get
+
+    </xmp>
+</body>
+
+</html>
+
+<script>
+
+    var lit = {
+        a: 'a',
+        b: this.a + 'b'
+    }
+    console.log(lit.a); // "a"
+    console.log(lit.b); // "ab" 가 출력되나요? 아니요. 어떻게 해야 할까?
+
+    var foo = {
+        a: 'a',
+        get b() {
+            return this.a + 'b';
+        }
+    }
+    console.log(foo.a); // "a"
+    console.log(foo.b); // "ab" 가 출력되나요? 예
+
+
+</script>

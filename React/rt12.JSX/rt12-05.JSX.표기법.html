@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/reset.css" />
+</head>
+
+<body>
+    <xmp>
+        아래의 코드를 JSX로 작성하고 실행하여 본다.
+
+        <div class="my-div">
+            <div style="border: 2px solid red; background-color:red;">
+                &nbsp;
+            </div>
+        </div>
+        --------------------------
+        1. 태그의 class 속성은 className 으로
+        2. 태그의 style 속성은 직접 작성이 불가하다.
+        3. props를 이용하여 "Hello, React" 가 출력되게 하시오.
+    </xmp>
+    <hr>
+
+    <div id="app">
+    </div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 'development.js'를 'production.min.js'로 대체하세요. -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js'> /* import { React} from 'react'; */</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js'>/* import { ReactDOM } from 'react-dom'; */</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js'>/* JSX를 자바스크립트로 변환 */</script>
+<script type='text/babel'>
+    //import React, { Component } from 'react'
+    //import ReactDOM from 'react-dom'
+
+    console.log(React)
+    console.log(ReactDOM)
+
+    class Jsx extends React.Component {
+
+        state = {
+            /* style을 위한 변수 등록 
+            "border: 2px solid red; background-color:red;"
+            */
+           style1 : {
+               border: "2px solid red",
+               backgroundColor:"red",
+           }
+        }
+        render() {
+            return (
+                <div className="my-div">
+                    <div style={this.state.style1}>
+                        {/* props를 이용하여 "Hello, React" 가 출력되게 하시오.*/}
+                        &nbsp;{this.props.mesg}
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    //export default rt12-05.JSX.표기법
+    ReactDOM.render(
+        <Jsx mesg={"Hello, React"}></Jsx>, document.getElementById("app")
+    )
+</script>

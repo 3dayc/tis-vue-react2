@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../css/reset.css" />
+</head>
+
+<body>
+    <xmp>
+        JSX 에서 반복문을 사용하는 방법을 배운다.
+
+        참고: https://flaviocopes.com/react-how-to-loop/
+        
+        컴포넌트명 
+        wrap1 ==> Loop1. for ~ in 사용 예제. 
+                  <Loop1 items={elements}></Loop1>
+        wrap2 ==> Loop2. for ~ of  사용 예제 
+                  <Loop2 items={elements}></Loop2>
+        wrap3 ==> Loop3. map 사용 예제.
+                  <Loop3 items={elements}></Loop2>
+        
+        작성  순서
+            단계1: React 객체 스크립트 플러그인 추가 or 객체 import
+            단계2. React 객체 import 여부 확인
+                console.log(React)
+                console.log(ReactDOM)
+            단계3. Component 만들기
+            단계4. Component 화면에 컴포넌트 주입
+    </xmp>
+    <hr>
+
+    <div id="wrap1"></div>
+    <div id="wrap2"></div>
+    <div id="wrap3"></div>
+</body>
+
+</html>
+
+<!-- react 플러그인 include   -->
+<!-- 주의: 사이트를 배포할 때는 "development.js"를 "production.min.js"로 대체하세요. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js">/* JSX를 자바스크립트로 변환 */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.12.0/umd/react.development.js"> /* import { React} from "react" */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.11.0/umd/react-dom.development.js">/* import { ReactDOM } from "react-dom" */</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.5/redux.js"> /* import {Redux} from "redux" */ </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/7.2.2/react-redux.js">/* import {ReactRedux} from "react-redux" */</script>
+<script type="text/babel">
+    //import React from "react"
+    //import ReactDOM from "react-dom"
+    
+    console.log(React)
+    console.log(ReactDOM)
+    
+    // 전역 변수로 선언. 
+    const elements = ["One", "Two", "Three"]
+
+    class Loop1 extends React.Component {
+        render() {
+            const items = this.props.elements
+            /*
+            <li key=0>One</li>
+            <li key=1>Two</li>
+            <li key=2>Three</li>
+            */
+            let arrs = []
+            for (const index in items) {
+                arrs.push( <li key={index}> {items[index]} </li>)
+            }
+            
+            return (
+                <div>
+                    { arrs }
+                </div>
+            )
+        }
+    }
+    ReactDOM.render( <Loop1 elements={elements}></Loop1>, document.getElementById("wrap1") )
+
+    class Loop2 extends React.Component {
+        render() {
+            const items = this.props.elements
+            /*
+            <li key=0>One</li>
+            <li key=1>Two</li>
+            <li key=2>Three</li>
+            */
+            let arrs = []
+            // items.entries() 는 [index,value] 값을 리턴한다. 
+            for (const [index, value] of items.entries() ) {
+                arrs.push( <li key={index}>{value}</li>)
+            }
+            return (
+                <div>
+                    { arrs}
+                </div>
+            )
+        }
+    }
+    ReactDOM.render(<Loop2 elements={elements}></Loop2>, document.getElementById("wrap2"))
+    
+    class Loop3 extends React.Component {
+        render() {
+            const items = this.props.elements
+            /*
+            <li key=0>One</li>
+            <li key=1>Two</li>
+            <li key=2>Three</li>
+            */
+            const arrs = items.map( (value, index)=>{
+                return (
+                    <li key={index}>{value}</li>
+                )
+            })
+            return (
+                <div>
+                    {arrs}
+                </div>
+            )
+        }
+    }
+    ReactDOM.render(<Loop3 elements={elements}></Loop3>, document.getElementById("wrap3"))
+    
+</script>

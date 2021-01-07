@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>서버의 데이터를 대상 엘리먼트에 삽입하기</title>
+
+    <style>
+        #app>div {
+            width: 200px;
+            margin: 3px;
+            float: left;
+        }
+
+        hr {
+            clear: both;
+        }
+    </style>
+
+    <script src="../axios.min.js"> /* axios 플러그인 임포트 */</script>
+    <script src="../jquery-3.4.1.js"> /* jQuery library */</script>
+    <script>
+        var clickMenu1 = function (event) {
+
+            axios({
+                url: "http://localhost:5050/html",  // 호출되는 서버 주소.
+                method: "get",       // request method: get, post, delete, put
+                params: null,  // 서버로 보내는 데이터. { data1:"test1", data2:"test2" }
+                timeout: 30000,    // 최대 대기 시간: 30초. 30초 이상이 되면 fail 부분이 실행됨.
+                responseType: "html",  // response로 넘어오는 데이터 형태: text, html, xml, json, jsonp, script
+            })
+            .then((res) => {
+                console.log(res.data);
+
+                var message1 = document.getElementById("message1");
+                message1.innerHTML = res.data
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+</script>
+
+</head>
+
+<body>
+<pre>
+    1. 실행 전에  서버를 실행하세요. <a href="#" onClick="window.open('../vue09서버통신/vue09-03.Node서버실행.html','vue09-03.Node서버실행','width=800,height=650,toolbar=no,menubar=no,scrollbars=no,resizable=yes');return false;" rel="nofollow">vue09-03.Node서버실행</a>
+
+    2. "메뉴 보기 1"을 클릭하면 http://localhost:5050/html 의 전체 내용을 id="message1"에 추가하시오.
+
+</pre>
+
+<hr>
+<div id="app">
+    <div>
+        <a href="#" id="menu1" onClick="clickMenu1()">메뉴 보기 1</a>
+            <span id="message1">
+                <!--
+                    <p> 중 식 메 뉴 </p>
+                    <ul>
+                    <li> 짜장면 </li>
+                    <li> 짬뽕 </li>
+                    <li> 기스면 </li>
+                    <li> 탕수육 </li>
+                    </ul>
+                    <p> 메뉴를 골라주세요.</p>
+                -->
+            </span>
+        </div>
+    </div>
+</body>
+
+</html>
+
+
